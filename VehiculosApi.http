@@ -1,0 +1,74 @@
+@baseUrl = http://localhost:5121
+
+### Obtener token CSRF
+# @name csrf
+GET {{baseUrl}}/api/csrf/token
+
+### Login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin",
+  "password": "Admin123!"
+}
+
+### Estado de sesión
+GET {{baseUrl}}/api/auth/status
+
+### Listar vehículos
+GET {{baseUrl}}/api/vehiculos
+
+### Crear vehículo
+POST {{baseUrl}}/api/vehiculos
+Content-Type: application/json
+X-XSRF-TOKEN: {{csrf.response.body.token}}
+
+{
+  "marca": "Chevrolet",
+  "modelo": "Spark",
+  "anio": 2021,
+  "color": "Azul",
+  "placa": "DEF456",
+  "vin": "KL8CB6SAXEC123456",
+  "kilometraje": 25000,
+  "tipoCombustible": "Gasolina",
+  "precio": 35000000,
+  "estado": "Disponible"
+}
+
+### Actualizar vehículo
+PUT {{baseUrl}}/api/vehiculos/1
+Content-Type: application/json
+X-XSRF-TOKEN: {{csrf.response.body.token}}
+
+{
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "anio": 2022,
+  "color": "Negro",
+  "placa": "ABC123",
+  "vin": "1HGBH41JXMN109186",
+  "kilometraje": 16000,
+  "tipoCombustible": "Gasolina",
+  "precio": 87000000,
+  "estado": "Disponible"
+}
+
+### Eliminar vehículo
+DELETE {{baseUrl}}/api/vehiculos/3
+X-XSRF-TOKEN: {{csrf.response.body.token}}
+
+### Logout
+POST {{baseUrl}}/api/auth/logout
+X-XSRF-TOKEN: {{csrf.response.body.token}}
+
+### Login con credenciales inválidas (401)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin",
+  "password": "incorrecta"
+}
